@@ -1,0 +1,181 @@
+body{
+    background-color:#FFFFFF;
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: 'Quicksand', sans-serif;
+    font-size: 20px;
+}
+
+div {
+    display:block;
+}
+
+img {
+    max-width: 100%;
+}
+
+#header{
+    background-color:#232830;
+    width:100%;
+    position:relative;
+    padding-bottom: 15%;
+    background-image: url('/images/teamcrop.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#unused {
+    background: -webkit-linear-gradient(#232830, #363E4A); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#232830, #363E4A); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#232830, #363E4A); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#232830, #363E4A); /* Standard syntax (must be last) */
+}
+
+header {
+    position:absolute;
+    left:0;
+    width:100%;
+    text-align:center;
+    color: #dfe1e8;
+    top:50%;
+    transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -webkit-font-smoothing: antialiased;
+}
+
+header h1 {
+    font-size: 4em;
+    text-shadow: 2px 2px #000;
+}
+
+header h2 {
+    text-shadow: 2px 2px #000;
+}
+
+#content {
+    position:relative;
+    -webkit-font-smoothing: antialiased;
+}
+
+footer {
+    text-align:center;
+    -webkit-font-smoothing: antialiased;
+}
+
+
+#footercontent {
+    background-color:#eff1f5;
+    padding: 40px 12px;
+}
+
+#copyright{
+    border-top: 10px solid rgb(236, 1, 138);
+    background-color: #232830;
+    color: #def1e8;
+    padding: 20px 12px;
+}
+
+#content article {
+    padding: 40px;
+    float:left;
+    text-align: justify;
+}
+
+#nav {
+    width:100%;
+    background-color:  rgb(236, 1, 138);
+    text-align: center;
+    color: #dfe1e8;
+    -webkit-font-smoothing: antialiased;
+}
+
+#nav div {
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#nav a{
+    color: #dfe1e8;
+    line-height: 2em;
+    padding: 0.5em 0.5em;
+    display:block;
+}
+
+#nav a:hover {
+    background-color:#851759;
+    text-decoration: none;
+}
+
+.navlink {
+    font-size: 24px;
+}
+
+.listen {
+    text-align: right;
+    font-size:1.5em;
+}
+
+.calendar {
+    font-size:10em;
+    float:left;
+}
+
+.latestbutton {
+    background-color: rgb(236, 1, 138);
+}
+
+.latestpodcastdescription {
+   font-size:1.2em;
+}
+
+#contentbottom {
+    background-color:#eff1f5;
+    padding: 40px 12px;
+}
+
+.teampic {
+    float: left;
+    padding: 10px;
+}
+
+.teambio{
+    padding:10px;
+}
+
+.podcastsummary {
+    padding: 5px;
+    min-height: 350px;
+    vertical-align: middle;
+}
+
+.podcastsummaryinner {
+    border: 1px solid #a5a5a5;
+    text-align: center;
+    width: 100%;
+    min-height: 350px;
+    padding: 5px 15px;
+    background-color: #FFFFFF;
+}
+
+.podcastsummaryinnerpub {
+    background-color: #eff1f5;
+    clear:both;
+    text-align: center;
+    margin: 15px 0px;
+}
+
+.podcastlist {
+    margin-top: 20px;
+}
+
+a {
+    color: rgb(236, 1, 138);
+}
+
+a:hover {
+    text-decoration: underline;
+    color: rgb(236, 1, 138);
+}
