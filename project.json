@@ -43,13 +43,6 @@
       "version": "1.0.0-preview2-final",
       "imports": "portable-net45+win8+dnxcore50"
     },
-    "Microsoft.EntityFrameworkCore.Tools": {
-      "version": "1.0.0-preview2-final",
-      "imports": [
-        "portable-net45+win8+dnxcore50",
-        "portable-net45+win8"
-      ]
-    },
     "Microsoft.Extensions.SecretManager.Tools": {
       "version": "1.0.0-preview2-final",
       "imports": "portable-net45+win8+dnxcore50"

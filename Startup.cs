@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Blobr;
 
 namespace SocialClubNI
 {
@@ -31,6 +32,12 @@ namespace SocialClubNI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddTransient<StorageWrapper>(provider => 
+            {
+                var azureWrapper = new AzureStorageWrapper(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"], "testingcontainer");
+                return new StorageWrapper(azureWrapper);    
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +62,13 @@ namespace SocialClubNI
 
             app.UseMvc(routes =>
             {
+
+                routes.MapRoute(
+                    name: "episodes",
+                    template: "seasons/{season?}",
+                    defaults: new { controller = "Home", Action = "Seasons" }
+                );
+
                 routes.MapRoute(
                     name: "default",
                     template: "{action=Index}/{id?}",
