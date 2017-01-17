@@ -12,7 +12,7 @@ namespace SocialClubNI.Controllers
     {
         public IActionResult Index()
         {
-            var azureWrapper = new AzureStorageWrapper("andrecolltest", "5YE5X/xOZPCKpCtdsi2eAxjnPmcoia88q6TPrLziCGS+KhhWL3LEupD1UOsdBtSqmlIOi0+jGlD2D3yArYscMw==", "testingcontainer");
+            var azureWrapper = new AzureStorageWrapper("andrecolltest", "asasd", "testingcontainer");
             var storageWrapper = new StorageWrapper(azureWrapper);
 
             var page = storageWrapper.GetPageAsync<Podcast>($"podcasts-1617").Result;
@@ -26,7 +26,7 @@ namespace SocialClubNI.Controllers
 
         public IActionResult Episodes(string seasons = "1617")
         {
-            var azureWrapper = new AzureStorageWrapper("andrecolltest", "5YE5X/xOZPCKpCtdsi2eAxjnPmcoia88q6TPrLziCGS+KhhWL3LEupD1UOsdBtSqmlIOi0+jGlD2D3yArYscMw==", "testingcontainer");
+            var azureWrapper = new AzureStorageWrapper("andrecolltest", "asdasd", "testingcontainer");
             var storageWrapper = new StorageWrapper(azureWrapper);
 
             var page = storageWrapper.GetPageAsync<Podcast>($"podcasts-1617").Result;
