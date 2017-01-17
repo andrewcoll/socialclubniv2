@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Blobr;
 using Newtonsoft.Json;
 using SocialClubNI.Models;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace SocialClubNI.Controllers
 {

@@ -1,9 +1,13 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Blobr;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace SocialClubNI
 {
@@ -38,6 +42,15 @@ namespace SocialClubNI
                 var azureWrapper = new AzureStorageWrapper(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"], "testingcontainer");
                 return new StorageWrapper(azureWrapper);    
             });
+
+            services.AddTransient<CloudBlobContainer>(provider => 
+            {
+                var storageAccount = new CloudStorageAccount(new StorageCredentials(Configuration["tscniRealName"], Configuration["tscniRealKey"]), true);
+                var blobClient = storageAccount.CreateCloudBlobClient();
+                var container = blobClient.GetContainerReference("podcasts");
+
+                return container;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,6 +80,12 @@ namespace SocialClubNI
                     name: "seasons",
                     template: "seasons/{season?}",
                     defaults: new { controller = "Home", Action = "Seasons" }
+                );
+
+                routes.MapRoute(
+                    name: "download",
+                    template: "download/{filename}",
+                    defaults: new { controller = "Download", Action = "Download" }
                 );
 
                 routes.MapRoute(
