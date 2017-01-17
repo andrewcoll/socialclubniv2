@@ -1,6 +1,8 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,6 +10,7 @@ using Blobr;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace SocialClubNI
 {
@@ -56,6 +59,22 @@ namespace SocialClubNI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                LoginPath = new PathString("/login")
+            });
+
+            app.UseTwitterAuthentication(new TwitterOptions()
+            {
+               ConsumerKey = Configuration["tscniTwitKey"],
+               ConsumerSecret = Configuration["tscniTwitSecret"],
+               SignInScheme = "Twitter",
+            });
+
+            
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -69,11 +88,17 @@ namespace SocialClubNI
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseTwitterAuthentication(new TwitterOptions()
+            // Choose an authentication type
+            app.Map("/login", signoutApp =>
             {
-               ConsumerKey = Configuration["tscniTwitKey"],
-               ConsumerSecret = Configuration["tscniTwitSecret"] 
+                signoutApp.Run(async context =>
+                {
+                    var authType = "Twitter";
+                    await context.Authentication.ChallengeAsync(authType, new AuthenticationProperties() { RedirectUri = "/" });
+                    return;
+                });
             });
+
 
             app.UseStaticFiles();
 
