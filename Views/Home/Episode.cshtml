@@ -1,0 +1,85 @@
+@model SocialClubNI.Models.MixCloudPodcast
+
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+        appId      : '808904562554589',
+        xfbml      : true,
+        version    : 'v2.5'
+        });
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<script>window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+    
+    t._e = [];
+    t.ready = function(f) {
+        t._e.push(f);
+    };
+    
+    return t;
+    }(document, "script", "twitter-wjs"));
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="podcastsummaryinnerpub">@Model.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")</div>
+            <h2>@Model.Title</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-10">
+            <h3>@Model.SubTitle</h3>
+            <p>@Model.Summary</p>
+            <p>Duration: @Model.Duration</p>
+        </div>
+        <div class="col-sm-12 col-md-2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a class="btn btn-default btn-primary btn-large" target="_blank" href="/download/@Model.Filename">Download Mp3</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" style="margin-top: 10px;">
+                        <a class="twitter-share-button" href="https://twitter.com/share" data-size="large" data-text="@Model.Title">Share this on Twitter</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12" style="margin-top: 10px;">
+                        <div class="fb-share-button" data-width="450" data-href="http://tscnijs.azurewebsites.net/episodes/@Model.Stub" data-layout="button_count"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section mainbottom{
+    <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-4">
+                   @Html.Raw(@Model.Embed)
+                </div>
+                <div class="col-sm-12 col-md-8">
+                    Disqus goes here
+                </div>
+            </div>
+         </div>
+}

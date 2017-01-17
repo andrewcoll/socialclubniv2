@@ -9,7 +9,7 @@
         <div class="col-sm-12">
             <div style="text-align:center"><h1>Latest Episode</h1></span>
             <div class="podcastsummaryinnerpub">@latest.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")</div>
-            <h2><a href="/episodes/@latest.Stub">@latest.Title</a></h2>
+            <h2><a href="/episode/@latest.Season/@latest.Stub">@latest.Title</a></h2>
             <h3>@latest.SubTitle</h3>
             <p>@latest.Summary</p>
             <p>Duration: @latest.Duration</p>
@@ -47,7 +47,7 @@
                             @pod.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")
                             </div>
                             <span style="text-align:center">
-                                <h2><a href="/episodes/@pod.Stub">@pod.Title</a></h2>
+                                <h2><a href="/episode/@pod.Season/@pod.Stub">@pod.Title</a></h2>
                             </span>
                             
                             <p>@pod.SubTitle</p>

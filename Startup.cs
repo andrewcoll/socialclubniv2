@@ -64,9 +64,15 @@ namespace SocialClubNI
             {
 
                 routes.MapRoute(
-                    name: "episodes",
+                    name: "seasons",
                     template: "seasons/{season?}",
                     defaults: new { controller = "Home", Action = "Seasons" }
+                );
+
+                routes.MapRoute(
+                    name: "episode",
+                    template: "episode/{season}/{stub}",
+                    defaults: new { controller = "Home", Action = "Episode" }
                 );
 
                 routes.MapRoute(
