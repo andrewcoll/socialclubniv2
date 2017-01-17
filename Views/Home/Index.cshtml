@@ -1,3 +1,5 @@
+@model SocialClubNI.Models.Podcast
+
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-6">
@@ -15,3 +17,19 @@
         </div>
     </div>
 </div>
+
+@section mainbottom{
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <article class="info">
+                    <span style="text-align: center"><h1>Latest Episode</h1></span>
+                    <h2><a href="/episodes/@Model.Stub">@Model.Title</a></h2>
+                    @Model.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")
+                    <h3>@Model.SubTitle</h3>
+                    <p>@Model.Summary</p>
+                </article>
+            </div>
+        </div>
+    </div>
+}

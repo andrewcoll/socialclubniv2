@@ -1,1 +1,59 @@
-<h1>TBD</h1>
+@model IEnumerable<SocialClubNI.Models.Podcast>
+
+@{
+    var latest = Model.First();
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="text-align:center"><h1>Latest Episode</h1></span>
+            <div class="podcastsummaryinnerpub">@latest.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")</div>
+            <h2><a href="/episodes/@latest.Stub">@latest.Title</a></h2>
+            <h3>@latest.SubTitle</h3>
+            <p>@latest.Summary</p>
+            <p>Duration: @latest.Duration</p>
+        </div>
+    </div>
+</div>
+
+@section mainbottom{
+    <div class="container">
+        <div style="text-align:center"><h1>Previous Episodes</h1></span>
+            <div class="row">
+                <nav class="navbar navbar-default">
+                    <div class="navbar-header">
+                        <span class="navbar-brand">Select Season</span>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/seasons">16/17</a></li>
+                            <li><a href="/seasons/1516">15/16</a></li>
+                            <li><a href="/seasons/1415">14/15</a></li>
+                            <li><a href="/seasons/1314">13/14</a></li>
+                            <li><a href="/seasons/1213">12/13</a></li>
+                            <li><a href="/seasons/1112">11/12</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            
+            <div class="row podcastlist">
+                @foreach(var pod in Model)
+                {
+                    <div class="col-sm-12 col-md-4 podcastsummary">
+                        <div class="podcastsummaryinner">
+                        <div class="podcastsummaryinnerpub">
+                            @pod.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")
+                            </div>
+                            <span style="text-align:center">
+                                <h2><a href="/episodes/@pod.Stub">@pod.Title</a></h2>
+                            </span>
+                            
+                            <p>@pod.SubTitle</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+}
