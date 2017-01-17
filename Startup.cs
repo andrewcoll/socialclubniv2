@@ -69,6 +69,12 @@ namespace SocialClubNI
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseTwitterAuthentication(new TwitterOptions()
+            {
+               ConsumerKey = Configuration["tscniTwitKey"],
+               ConsumerSecret = Configuration["tscniTwitSecret"] 
+            });
+
             app.UseStaticFiles();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
