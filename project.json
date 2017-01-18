@@ -9,8 +9,6 @@
     "Blobr": "1.0.0",
     "WindowsAzure.Storage": "7.2.1",
     "Newtonsoft.Json": "9.0.1",
-    "Microsoft.AspNetCore.Authentication" : "1.1.0",
-    "Microsoft.AspNetCore.Authentication.Twitter": "1.1.0",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",

@@ -11,6 +11,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using SocialClubNI.Services;
 
 namespace SocialClubNI
 {
@@ -46,6 +47,9 @@ namespace SocialClubNI
                 return new StorageWrapper(azureWrapper);    
             });
 
+            services.AddTransient<LoginManager>();
+            services.AddTransient<ClaimsManager>();
+
             services.AddTransient<CloudBlobContainer>(provider => 
             {
                 var storageAccount = new CloudStorageAccount(new StorageCredentials(Configuration["tscniRealName"], Configuration["tscniRealKey"]), true);
@@ -59,22 +63,6 @@ namespace SocialClubNI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseCookieAuthentication(new CookieAuthenticationOptions()
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                LoginPath = new PathString("/login")
-            });
-
-            app.UseTwitterAuthentication(new TwitterOptions()
-            {
-               ConsumerKey = Configuration["tscniTwitKey"],
-               ConsumerSecret = Configuration["tscniTwitSecret"],
-               SignInScheme = "Twitter",
-            });
-
-            
-
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -88,17 +76,15 @@ namespace SocialClubNI
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            // Choose an authentication type
-            app.Map("/login", signoutApp =>
+            // setup authorisation
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
-                signoutApp.Run(async context =>
-                {
-                    var authType = "Twitter";
-                    await context.Authentication.ChallengeAsync(authType, new AuthenticationProperties() { RedirectUri = "/" });
-                    return;
-                });
+                AuthenticationScheme = "TscniCookieMiddlewareInstance",
+                LoginPath = new PathString("/login"),
+                AccessDeniedPath = new PathString("/forbidden"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true
             });
-
 
             app.UseStaticFiles();
 
@@ -106,6 +92,11 @@ namespace SocialClubNI
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "login",
+                    template: "login",
+                    defaults: new { controller = "Account", Action = "Login" }
+                );
 
                 routes.MapRoute(
                     name: "seasons",
