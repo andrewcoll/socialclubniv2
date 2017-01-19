@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Blobr;
 using Newtonsoft.Json;
 using SocialClubNI.Models;
-using Microsoft.WindowsAzure.Storage.Blob;
+using SocialClubNI.Services;
 
 namespace SocialClubNI.Controllers
 {
@@ -16,14 +16,23 @@ namespace SocialClubNI.Controllers
         private const string MIXCLOUD_URL = "https://www.mixcloud.com/oembed/?url=https%3A//www.mixcloud.com/ardskeith/{0}/&format=json";
 
         private readonly StorageWrapper storageWrapper;
+        private readonly LoginManager claimsManager;
 
-        public HomeController(StorageWrapper storageWrapper)
+        public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager)
         {
             this.storageWrapper = storageWrapper;
+            this.claimsManager = claimsManager;
         }
 
         public async Task<IActionResult> Index()
         {
+            var loggedIn = await claimsManager.GetUser(HttpContext.User);
+            if(loggedIn != null)
+            {
+                ViewBag.Username = loggedIn.Username;
+            }
+            
+
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
             return View(page.Items.OrderByDescending(p => p.Published).First());
         }
