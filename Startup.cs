@@ -83,7 +83,9 @@ namespace SocialClubNI
                 LoginPath = new PathString("/login"),
                 AccessDeniedPath = new PathString("/forbidden"),
                 AutomaticAuthenticate = true,
-                AutomaticChallenge = true
+                AutomaticChallenge = true,
+                ExpireTimeSpan = new TimeSpan(14, 0, 0, 0),
+                SlidingExpiration = true
             });
 
             app.UseStaticFiles();
@@ -96,6 +98,12 @@ namespace SocialClubNI
                     name: "login",
                     template: "login",
                     defaults: new { controller = "Account", Action = "Login" }
+                );
+
+                routes.MapRoute(
+                    name: "logout",
+                    template: "logout",
+                    defaults: new { controller = "Account", Action = "Logout" }
                 );
 
                 routes.MapRoute(
