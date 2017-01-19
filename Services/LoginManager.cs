@@ -43,9 +43,8 @@ namespace SocialClubNI.Services
         public async Task<User> GetUser(ClaimsPrincipal principal)
         {
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier);
-            var user = temp.FirstOrDefault(u => u.Id == userId.Value);
-
-            return user;
+            
+            return userId != null ? temp.FirstOrDefault(u => u.Id == userId.Value) : null;
         }
     }
 }

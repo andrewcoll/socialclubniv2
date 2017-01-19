@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using SocialClubNI.Models;
 using SocialClubNI.ViewModels;
 using SocialClubNI.Services;
@@ -34,7 +35,7 @@ namespace SocialClubNI.Controllers
                 {
                     var userPrincipal = claimsManager.CreatePrincipalAsync(result);
                     await HttpContext.Authentication.SignInAsync("TscniCookieMiddlewareInstance", userPrincipal, new AuthenticationProperties() { IsPersistent = true });
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Profile", "Account");
                 }
                 else
                 {
@@ -48,8 +49,16 @@ namespace SocialClubNI.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            var x = HttpContext.User;
             await HttpContext.Authentication.SignOutAsync("TscniCookieMiddlewareInstance");
+            var y = HttpContext.User;
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize(Policy = "LoggedIn")]
+        public async Task<string> Profile()
+        {
+            return "Hello World";
         }
     }
 }

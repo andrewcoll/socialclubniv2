@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -58,6 +59,11 @@ namespace SocialClubNI
 
                 return container;
             });
+
+            services.AddAuthorization(options => 
+            {
+                options.AddPolicy("LoggedIn", policy => policy.RequireClaim(ClaimTypes.NameIdentifier));    
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,7 +121,7 @@ namespace SocialClubNI
                 routes.MapRoute(
                     name: "download",
                     template: "download/{filename}",
-                    defaults: new { controller = "Download", Action = "Download" }
+                    defaults: new { controller = "File", Action = "Download" }
                 );
 
                 routes.MapRoute(
@@ -126,8 +132,7 @@ namespace SocialClubNI
 
                 routes.MapRoute(
                     name: "default",
-                    template: "{action=Index}/{id?}",
-                    defaults: new { controller = "Home" });
+                    template: "{controller=Home}/{action=Index}");
             });
         }
     }
