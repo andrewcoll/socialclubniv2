@@ -39,12 +39,52 @@ namespace SocialClubNI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login");
+                    ModelState.AddModelError(string.Empty, "Failed to find a user with that username or password.");
                     return View(loginViewModel);
                 }
             }
 
             return View(loginViewModel);
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if(ModelState.IsValid)
+            {
+                if(await loginManager.IsExistingUsername(registerViewModel.Username))
+                {
+                    ModelState.AddModelError(string.Empty, "That username is already taken");
+                }
+
+                if(await loginManager.IsExistingEmail(registerViewModel.Email))
+                {
+                    ModelState.AddModelError(string.Empty, "An account has already been registered with that email address.");
+                }
+
+                if(registerViewModel.Password != registerViewModel.PasswordConfirm)
+                {
+                    ModelState.AddModelError(string.Empty, "Passwords do not match");
+                }
+
+                if(ModelState.ErrorCount > 0)
+                {
+                    return View(registerViewModel);
+                }
+
+                var registeredUser = await loginManager.RegisterUserAsync(registerViewModel.Username, registerViewModel.Email, registerViewModel.Password);
+                var userPrincipal = claimsManager.CreatePrincipalAsync(registeredUser);
+                await HttpContext.Authentication.SignInAsync("TscniCookieMiddlewareInstance", userPrincipal, new AuthenticationProperties() { IsPersistent = true } );
+
+                return RedirectToAction("Profile", "Account");
+            }
+
+            return View(registerViewModel);
         }
 
         public async Task<IActionResult> Logout()

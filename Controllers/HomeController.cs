@@ -75,5 +75,10 @@ namespace SocialClubNI.Controllers
 
             return View(mixcloudPodcast);
         }
+
+        public IActionResult Forbidden()
+        {
+            return View();
+        }
     }
 }

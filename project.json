@@ -13,6 +13,7 @@
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Http.Features": "1.0.0",
+    "Microsoft.AspNetCore.Cryptography.KeyDerivation": "1.1.0",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.0.0-preview2-final",
       "type": "build"

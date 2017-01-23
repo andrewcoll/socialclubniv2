@@ -96,10 +96,14 @@ namespace SocialClubNI
 
             app.UseStaticFiles();
 
-            // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
-
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "register",
+                    template: "register",
+                    defaults: new { controller = "Account", Action = "Register" }
+                );
+
                 routes.MapRoute(
                     name: "login",
                     template: "login",
@@ -128,6 +132,18 @@ namespace SocialClubNI
                     name: "episode",
                     template: "episode/{season}/{stub}",
                     defaults: new { controller = "Home", Action = "Episode" }
+                );
+
+                routes.MapRoute(
+                    name: "team",
+                    template: "team",
+                    defaults: new { controller = "Home", Action = "Team" }
+                );
+
+                routes.MapRoute(
+                    name: "forbidden",
+                    template: "forbidden",
+                    defaults: new { controller = "Home", Action = "Forbidden" }
                 );
 
                 routes.MapRoute(

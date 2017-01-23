@@ -2,13 +2,20 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SocialClubNI.ViewModels
 {
-    public class LoginViewModel
+    public class RegisterViewModel
     {
         /// <summary>
         /// Username
         /// </summary>
         /// <returns></returns>
         public string Username { get; set; }
+        
+        /// <summary>
+        /// User email
+        /// </summary>
+        /// <returns></returns>
+        [EmailAddress]
+        public string Email { get; set; }
 
         /// <summary>
         /// User password
@@ -18,9 +25,10 @@ namespace SocialClubNI.ViewModels
         public string Password { get; set; }
 
         /// <summary>
-        /// Remember me
+        /// Password confirmation
         /// </summary>
         /// <returns></returns>
-        public bool RememberMe { get; set; }
+        [DataTypeAttribute(DataType.Password)]
+        public string PasswordConfirm { get; set; }
     }
 }

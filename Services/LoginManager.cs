@@ -15,8 +15,6 @@ namespace SocialClubNI.Services
         private readonly StorageWrapper storageWrapper;
         private const string USER_BLOB = "users";
 
-        private static List<User> temp = new List<User>();
-
         public LoginManager(StorageWrapper storageWrapper)
         {
             this.storageWrapper = storageWrapper;
@@ -30,21 +28,66 @@ namespace SocialClubNI.Services
         /// <returns></returns>
         public async Task<User> VerifyLoginAsync(string username, string password)
         {
-            //var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
+            var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
 
-            //var existingUser = users.Items
-            //                    .FirstOrDefault(u => u.Username == username && u.Password == password);
+            var existingUser = users.Items
+                                .FirstOrDefault(u => u.Username == username);
             
-            var existingUser = new User() { Username = "Andrew", Id = Guid.NewGuid().ToString() };
-            temp.Add(existingUser);
+            if(existingUser != null)
+            {
+                var saltedPassword = SaltProvider.GenerateHashedPassword(password, existingUser.Salt);
+                
+                if(saltedPassword == existingUser.Password)
+                {
+                    return existingUser;
+                }
+            }
+            
             return existingUser;
+        }
+
+        public async Task<User> RegisterUserAsync(string username, string email, string password)
+        {
+            var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
+
+            var salt = SaltProvider.GenerateSalt();
+            var hashedPassword = SaltProvider.GenerateHashedPassword(password, salt);
+
+            var user = new User()
+            {
+                Username = username,
+                Password = hashedPassword,
+                Salt = salt,
+                Email = email,
+                Id = Guid.NewGuid().ToString()
+            };
+
+            users.AddItem(user);
+            await storageWrapper.SavePageAsync("users", users);
+
+            return user;
         }
 
         public async Task<User> GetUser(ClaimsPrincipal principal)
         {
+            var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier);
             
-            return userId != null ? temp.FirstOrDefault(u => u.Id == userId.Value) : null;
+            return userId != null ? users.Items.FirstOrDefault(u => u.Id == userId.Value) : null;
+        }
+
+        public async Task<bool> IsExistingUsername(string username)
+        {
+            var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
+
+            return users.Items.Any(u => string.Compare(u.Username, username, true) == 0);
+        }
+
+        public async Task<bool> IsExistingEmail(string email)
+        {
+            var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
+
+            return users.Items.Any(u => string.Compare(u.Email, email, true) == 0);
         }
     }
 }
