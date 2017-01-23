@@ -8,6 +8,9 @@ using Blobr;
 using Newtonsoft.Json;
 using SocialClubNI.Models;
 using SocialClubNI.Services;
+using SocialClubNI.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace SocialClubNI.Controllers
 {
@@ -26,13 +29,6 @@ namespace SocialClubNI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var loggedIn = await claimsManager.GetUser(HttpContext.User);
-            if(loggedIn != null)
-            {
-                ViewBag.Username = loggedIn.Username;
-            }
-            
-
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
             return View(page.Items.OrderByDescending(p => p.Published).First());
         }
@@ -79,6 +75,15 @@ namespace SocialClubNI.Controllers
         public IActionResult Forbidden()
         {
             return View();
+        }
+
+        [Authorize(Policy = "LoggedIn")]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await claimsManager.GetUser(HttpContext.User);
+
+            var vm = new ProfileViewModel() { Username = user.Username, Email = user.Email };
+            return View(vm);
         }
     }
 }
