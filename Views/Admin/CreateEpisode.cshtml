@@ -1,10 +1,11 @@
-@model SocialClubNI.Models.Podcast
+@model SocialClubNI.ViewModels.CreateEpisodeViewModel
 
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
             <section>
                 <form asp-action="Create" asp-controller="Admin" method="POST">
+                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="form-group">
                         <label for="inputTitle">Title</label>
                         <input type="text" class="form-control" id="inputTitle" name="title" value="@Model.Title" required>
@@ -17,7 +18,14 @@
                         <label for="inputSubtitle">Summary</label>
                         <textarea name="summary" id="inputSummary" class="form-control" rows="6" required>@Model.Summary</textarea>
                     </div>
-                    
+                    <div class="form-group">
+                        <label for="inputFilename">Filename</label>
+                        <select asp-for="Filename" asp-items="Model.Mp3s" id="inputFilename" class="form-control"></select>
+                    </div>
+                    <input asp-for="Duration" type="hidden" />
+                    <input asp-for="Stub" type="hidden" />
+                    <input asp-for="Published" type="hidden" />
+                    <input asp-for="Season" type="hidden" />
                     <button type="submit" class="btn btn-default">Upload and Save</button>
                 </form>
             </section>

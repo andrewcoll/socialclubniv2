@@ -60,7 +60,7 @@ namespace SocialClubNI.Services
         {
             var blobs = await container.ListBlobsSegmentedAsync(null, true, BlobListingDetails.Metadata, null, null, null, null);
 
-            return blobs.Results.Select(b => b.Uri.ToString()).ToList();
+            return blobs.Results.Select(b => Uri.UnescapeDataString(b.Uri.Segments.Last())).ToList();
         }
     }
 }
