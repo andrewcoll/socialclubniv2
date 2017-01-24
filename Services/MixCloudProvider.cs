@@ -23,7 +23,7 @@ namespace SocialClubNI.Services
         /// </summary>
         /// <param name="stub">The unique podcast stub</param>
         /// <returns>Embed HTML</returns>
-        public static async Task<string> GetMixCloudEmbed(string stub)
+        public async Task<string> GetMixCloudEmbed(string stub)
         {
             if(string.IsNullOrWhiteSpace(stub))
             {
@@ -51,7 +51,7 @@ namespace SocialClubNI.Services
         /// </summary>
         /// <param name="stub">Unique Podcast stub</param>
         /// <returns>Podcast metadata</returns>
-        public static async Task<Podcast> GetMixCloudMetata(string stub)
+        public async Task<Podcast> GetMixCloudMetata(string stub)
         {
             if(string.IsNullOrWhiteSpace(stub))
             {

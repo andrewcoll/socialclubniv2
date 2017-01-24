@@ -57,7 +57,7 @@ namespace SocialClubNI.Controllers
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
             var podcast = page.Items.FirstOrDefault(p => string.Compare(stub, p.Stub, true) == 0);
 
-            var parsedResponse = await MixCloudProvider.GetMixCloudEmbed(stub);
+            var parsedResponse = await mixCloudProvider.GetMixCloudEmbed(stub);
 
             var mixcloudPodcast = MixCloudPodcast.FromPodcast(podcast, parsedResponse);
 

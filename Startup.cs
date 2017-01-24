@@ -61,6 +61,8 @@ namespace SocialClubNI
                 return container;
             });
 
+            services.AddTransient<PodcastFileProvider>();
+
             services.AddAuthorization(options => 
             {
                 options.AddPolicy("LoggedIn", policy => policy.RequireClaim(ClaimTypes.NameIdentifier));    

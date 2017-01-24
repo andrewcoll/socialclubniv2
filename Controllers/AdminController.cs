@@ -30,7 +30,7 @@ namespace SocialClubNI.Controllers
                 return View("CreateStub");
             }
 
-            var podcast = await MixCloudProvider.GetMixCloudMetata(stub);
+            var podcast = await mixCloudProvider.GetMixCloudMetata(stub);
             return View("CreateEpisode", podcast);
         }
 
