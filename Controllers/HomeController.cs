@@ -21,10 +21,13 @@ namespace SocialClubNI.Controllers
         private readonly StorageWrapper storageWrapper;
         private readonly LoginManager claimsManager;
 
-        public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager)
+        private readonly MixCloudProvider mixCloudProvider;
+
+        public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager, MixCloudProvider mixCloudProvider)
         {
             this.storageWrapper = storageWrapper;
             this.claimsManager = claimsManager;
+            this.mixCloudProvider = mixCloudProvider;
         }
 
         public async Task<IActionResult> Index()
@@ -54,20 +57,9 @@ namespace SocialClubNI.Controllers
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
             var podcast = page.Items.FirstOrDefault(p => string.Compare(stub, p.Stub, true) == 0);
 
-            var mixcloudUrl = string.Format(MIXCLOUD_URL, podcast.Stub);
+            var parsedResponse = await MixCloudProvider.GetMixCloudEmbed(stub);
 
-            HttpClient client = new HttpClient();
-            
-            var result = await client.GetAsync(mixcloudUrl);
-            if(!result.IsSuccessStatusCode)
-            {
-                RedirectToAction("Error");
-            }
-
-            var response = await result.Content.ReadAsStringAsync();
-            var parsedResponse = JsonConvert.DeserializeObject<Dictionary<string, string>>(response);
-
-            var mixcloudPodcast = MixCloudPodcast.FromPodcast(podcast, parsedResponse["embed"]);
+            var mixcloudPodcast = MixCloudPodcast.FromPodcast(podcast, parsedResponse);
 
             return View(mixcloudPodcast);
         }
