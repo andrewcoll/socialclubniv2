@@ -1,0 +1,26 @@
+@model SocialClubNI.Models.Podcast
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <section>
+                <form asp-action="Create" asp-controller="Admin" method="POST">
+                    <div class="form-group">
+                        <label for="inputTitle">Title</label>
+                        <input type="text" class="form-control" id="inputTitle" name="title" value="@Model.Title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSubtitle">Subtitle</label>
+                        <input type="text" class="form-control" id="inputSubtitle" name="subtitle" value="@Model.SubTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSubtitle">Summary</label>
+                        <textarea name="summary" id="inputSummary" class="form-control" rows="6" required>@Model.Summary</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-default">Upload and Save</button>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
