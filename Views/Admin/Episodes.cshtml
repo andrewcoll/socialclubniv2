@@ -1,0 +1,29 @@
+@model SocialClubNI.ViewModels.ManageEpisodesViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-md-offset-2">
+            <div style="text-align:center"><h1>Existing Episodes</h1></span>
+            <p>Select an action for an episode below</p>
+            <p><a asp-controller="Admin" asp-action="Index">Admin Index</a></div>
+            <hr />
+
+            @foreach(var episode in Model.Episodes)
+            {
+                <div class="row">
+                    <div class="col-sm-12 col-md-2">
+                        <span class="glyphicon glyphicon-music" style="font-size: 3em" aria-hidden="true"></span>
+                    </div> 
+                    <div class="col-sm-12 col-md-8">
+                        <p style="font-size: 1.5em">@episode.Title</p>
+                        <p>@episode.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")</p>
+                    </div>
+                    <div class="col-sm-12 col-md-2">
+                        <a asp-controller="Admin" asp-action="Delete" asp-route-stub="@episode.Stub"><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>
+                    </div> 
+                </div>
+                <hr />
+            }
+        </div>
+    </div>
+</div>

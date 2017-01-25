@@ -24,9 +24,28 @@ namespace SocialClubNI.Controllers
             this.fileProvider = fileProvider;
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         public IActionResult Upload()
         {
             return View();
+        }
+
+        public IActionResult Delete(string stub)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Episodes()
+        {
+            // TODO add previous seasons
+            var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
+            var episodes = page.Items.OrderByDescending(p => p.Published).ToList();
+            var vm = new ManageEpisodesViewModel() { Episodes = episodes };
+            return View(vm);
         }
         
         public async Task<IActionResult> Create(string stub)

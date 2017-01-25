@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-md-offset-2">
+            <div style="text-align:center"><h1>Admin Area</h1></span>
+            <p>Select an action below</p></div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <span class="glyphicon glyphicon-upload" style="font-size: 3em" aria-hidden="true"></span>
+                </div> 
+                <div class="col-sm-12 col-md-10">
+                    <a asp-controller="Admin" asp-action="Upload" style="font-size: 1.5em">Upload New Mp3</a>
+                    <p>Upload a new mp3 file to be used for an episode.</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <span class="glyphicon glyphicon-plus" style="font-size: 3em" aria-hidden="true"></span>
+                </div> 
+                <div class="col-sm-12 col-md-10">
+                    <a asp-controller="Admin" asp-action="Create" style="font-size: 1.5em">Create New Episode Listing</a>
+                    <p>Create a new episode of the podcast (must have uploaded mp3 file already).</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <span class="glyphicon glyphicon-list" style="font-size: 3em" aria-hidden="true"></span>
+                </div> 
+                <div class="col-sm-12 col-md-10">
+                    <a asp-controller="Admin" asp-action="Episodes" style="font-size: 1.5em">Manage Existing Episodes</a>
+                    <p>Edit or delete existing episodes</p>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </div>
+</div>
