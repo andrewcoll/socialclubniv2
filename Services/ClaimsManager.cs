@@ -21,7 +21,7 @@ namespace SocialClubNI.Services
             claimId.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
             claimId.AddClaim(new Claim(ClaimTypes.Name, user.Username));
             claimId.AddClaim(new Claim("LastChanged", DateTime.UtcNow.ToString()));
-
+            claimId.AddClaim(new Claim("testing", "true"));
             return new ClaimsPrincipal(claimId);
         }
     }

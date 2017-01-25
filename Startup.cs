@@ -66,6 +66,7 @@ namespace SocialClubNI
             services.AddAuthorization(options => 
             {
                 options.AddPolicy("LoggedIn", policy => policy.RequireClaim(ClaimTypes.NameIdentifier));    
+                options.AddPolicy("IsAdmin", policy => policy.RequireClaim("IAmAdministrator"));
             });
         }
 
