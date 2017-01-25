@@ -1,21 +1,21 @@
 <div class="container">
     <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <section>
-                <form method="GET" asp-controller="Admin" asp-action="Create" class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="stub" class="col-md-4 control-label">Soundcloud Stub</label>
-                        <div class="col-md-8">
-                            <input type="text" name="stub" class="form-control" />
-                        </div>
+        <div class="col-sm-12">
+            <div style="text-align:center"><h1>Create Episode</h1></span>
+            <p>Enter the Mixcloud Stub below for the episode you want to add.</p></div>
+            <form method="GET" asp-controller="Admin" asp-action="Create" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="stub" class="col-sm-12 col-md-3 control-label">Soundcloud Stub</label>
+                    <div class="col-sm-12 col-md-7">
+                        <input type="text" name="stub" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-default">Go</button>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12 col-md-offset-8 col-md-4">
+                        <button type="submit" class="btn btn-default">Go</button>
                     </div>
-                </form>
-            </section>
+                </div>
+            </form>
         </div>
     </div>
 </div>

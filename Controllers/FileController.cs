@@ -28,14 +28,14 @@ namespace SocialClubNI.Controllers
         }
 
         [HttpPost]
-        public async Task<string> Upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
             using(var fileStream = file.OpenReadStream())
             {
                 await fileProvider.UploadFileAsync(fileStream, file.FileName);
             }
             
-            return "Complete";
+            return View("FileUploadSuccess");
         }
     }
 }

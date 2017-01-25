@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div style="text-align:center"><h1>Upload File</h1></span>
+            <p>Select the mp3 below to upload</p></div>
+            <form method="POST" asp-controller="File" asp-action="Upload" class="form-horizontal" role="form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="stub" class="col-sm-12 col-md-3 control-label">Mp3</label>
+                    <div class="col-sm-12 col-md-7">
+                        <input type="file" name="file" accept=".mp3" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12 col-md-offset-8 col-md-4">
+                        <button type="submit" class="btn btn-default">Upload</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
