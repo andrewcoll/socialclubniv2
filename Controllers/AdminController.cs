@@ -99,7 +99,7 @@ namespace SocialClubNI.Controllers
                 podcast.Season = episode.Season;
 
                 podcasts.AddItem(podcast);
-                await storageWrapper.SavePageAsync($"podcasts-{episode.Season}", podcasts);
+                await storageWrapper.SavePageAsync(podcasts);
 
                 return RedirectToAction("Episode", "Home", new { season = episode.Season, stub = episode.Stub});
             }

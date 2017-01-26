@@ -63,7 +63,7 @@ namespace SocialClubNI.Services
             };
 
             users.AddItem(user);
-            await storageWrapper.SavePageAsync("users", users);
+            await storageWrapper.SavePageAsync(users);
 
             return user;
         }
