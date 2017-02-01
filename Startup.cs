@@ -103,6 +103,12 @@ namespace SocialClubNI
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "rss",
+                    template: "rss",
+                    defaults: new { controller = "Rss", Action = "Index" }
+                );
+
+                routes.MapRoute(
                     name: "register",
                     template: "register",
                     defaults: new { controller = "Account", Action = "Register" }
