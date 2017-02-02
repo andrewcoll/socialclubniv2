@@ -12,7 +12,7 @@ using PodFeedr;
 
 namespace SocialClubNI
 {
-    public class RssController
+    public class RssController : Controller
     {
         private readonly StorageWrapper storageWrapper;
 
@@ -47,11 +47,10 @@ namespace SocialClubNI
                 SubCategory = "Professional"
             };
 
-
-            var page = await GetAllPodcasts();      
-
             pod.Explicit = false;
             pod.Items = new List<PodFeedr.Episode>();
+            
+            var page = await GetAllPodcasts();      
 
             foreach(var episode in page.OrderBy(p => p.Published))
             {
@@ -59,7 +58,14 @@ namespace SocialClubNI
                 ep.Title = episode.Title;
                 ep.Summary = episode.Summary;
                 ep.Subtitle = episode.SubTitle;
-
+                ep.PubDate = episode.Published; 
+                ep.Author = "Laure James, Keith Bailie, Conor McLaughlin, Mark McIntosh";
+                ep.Url = new Uri($"http://thesocialclubni.com/download/{episode.Filename}?store=itunes");
+                ep.FileSize = 0; // TODO: bug fix
+                ep.FileType = "audio/mpeg";
+                ep.Category = "Sports & Recreation";
+                ep.Guid = $"http://irishfantasyleague.com/podcast/{episode.Filename}";
+                
                 // really ugly hack
                 var duration = episode.Duration;
                 if(duration.Count(c => c == ':') == 1)
@@ -67,17 +73,7 @@ namespace SocialClubNI
                     duration = "00:" + duration;
                 }
 
-                Console.WriteLine(duration);
                 ep.Duration = TimeSpan.Parse(duration);
-                
-                ep.PubDate = episode.Published; 
-
-                ep.Url = new Uri($"http://thesocialclubni.com/download/{episode.Filename}?store=itunes");
-                ep.FileSize = 0;
-                ep.FileType = "audio/mpeg";
-
-                ep.Category = "Sports & Recreation";
-                ep.Guid = $"http://irishfantasyleague.com/podcast/{episode.Filename}";
 
                 pod.Items.Add(ep);
             }
@@ -85,13 +81,13 @@ namespace SocialClubNI
             var podFeedr = new PodFeedr.PodFeedr(pod);
 
             string response = string.Empty;
-
             using(var stream = new MemoryStream())
             {
                 podFeedr.WriteStream(stream);
                 response = Encoding.UTF8.GetString(stream.ToArray());
             }
 
+            HttpContext.Response.ContentType = "application/xml";
             return response;
         }
 

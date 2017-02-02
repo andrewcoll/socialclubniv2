@@ -73,6 +73,11 @@ namespace PodFeedr
 
                     xmlWriter.WriteElementString("title", episode.Title);
                     xmlWriter.WriteElementString(prefix, "author", null, episode.Author);
+
+                    xmlWriter.WriteStartElement(prefix, "category", null);
+                    xmlWriter.WriteAttributeString("text", episode.Category);
+                    xmlWriter.WriteEndElement();
+
                     xmlWriter.WriteElementString(prefix, "subtitle", null, episode.Subtitle);
                     xmlWriter.WriteElementString(prefix, "summary", null, episode.Summary);
 
@@ -87,10 +92,6 @@ namespace PodFeedr
                     xmlWriter.WriteElementString("pubDate", episode.PubDate.ToString("ddd, d MMM yyyy HH:mm:ss zzz"));
                     xmlWriter.WriteElementString(prefix, "duration", null, episode.Duration.ToString());
                     xmlWriter.WriteElementString(prefix, "keywords", null, episode.Keywords);
-
-                    xmlWriter.WriteStartElement(prefix, "category", null);
-                    xmlWriter.WriteAttributeString("text", episode.Category);
-                    xmlWriter.WriteEndElement();
 
                     xmlWriter.WriteEndElement();
                 }
