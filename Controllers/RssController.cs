@@ -47,19 +47,28 @@ namespace SocialClubNI
                 SubCategory = "Professional"
             };
 
-            var page = await this.storageWrapper.GetPageAsync<SocialClubNI.Models.Podcast>("podcasts-1617");            
+
+            var page = await GetAllPodcasts();      
 
             pod.Explicit = false;
             pod.Items = new List<PodFeedr.Episode>();
 
-            foreach(var episode in page.Items.OrderBy(p => p.Published))
+            foreach(var episode in page.OrderBy(p => p.Published))
             {
                 var ep = new PodFeedr.Episode();
                 ep.Title = episode.Title;
                 ep.Summary = episode.Summary;
                 ep.Subtitle = episode.SubTitle;
-                //Console.WriteLine(episode.Duration);
-                //ep.Duration = TimeSpan.Parse(episode.Duration);
+
+                // really ugly hack
+                var duration = episode.Duration;
+                if(duration.Count(c => c == ':') == 1)
+                {
+                    duration = "00:" + duration;
+                }
+
+                Console.WriteLine(duration);
+                ep.Duration = TimeSpan.Parse(duration);
                 
                 ep.PubDate = episode.Published; 
 
@@ -84,6 +93,20 @@ namespace SocialClubNI
             }
 
             return response;
+        }
+
+        private async Task<ICollection<SocialClubNI.Models.Podcast>> GetAllPodcasts()
+        {
+            var podcasts = new List<SocialClubNI.Models.Podcast>();
+
+            var seasons = new []{ "1112", "1213", "1314", "1415", "1516", "1617" };
+            foreach(var s in seasons)
+            {
+                var page = await this.storageWrapper.GetPageAsync<SocialClubNI.Models.Podcast>($"podcasts-{s}");
+                podcasts.AddRange(page.Items);
+            }
+
+            return podcasts;
         }
     }
 }
