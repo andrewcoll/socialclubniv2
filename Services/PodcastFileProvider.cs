@@ -55,12 +55,34 @@ namespace SocialClubNI.Services
             return blob?.Uri.ToString();
         }
 
-
+        /// <summary>
+        /// Get the Filenames of all available blobs
+        /// </summary>
+        /// <returns></returns>
         public async Task<ICollection<string>> GetPodcastFilenames()
         {
             var blobs = await container.ListBlobsSegmentedAsync(null, true, BlobListingDetails.Metadata, null, null, null, null);
 
             return blobs.Results.Select(b => Uri.UnescapeDataString(b.Uri.Segments.Last())).ToList();
+        }
+
+        /// <summary>
+        /// Get the file size of a specified blob
+        /// </summary>
+        /// <param name="filename">Blob name</param>
+        /// <returns></returns>
+        public async Task<long> GetBlobSize(string filename)
+        {
+            var blob = container.GetBlobReference(filename);
+            long length = 0;
+
+            if(await blob.ExistsAsync())
+            {
+                await blob.FetchAttributesAsync();
+                length = blob.Properties.Length;
+            }
+            
+            return length;
         }
     }
 }

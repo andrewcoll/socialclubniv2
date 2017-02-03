@@ -97,6 +97,7 @@ namespace SocialClubNI.Controllers
                 podcast.Filename = episode.Filename;
                 podcast.Stub = episode.Stub; 
                 podcast.Season = episode.Season;
+                podcast.FileSize = await fileProvider.GetBlobSize(episode.Filename);
 
                 podcasts.AddItem(podcast);
                 await storageWrapper.SavePageAsync($"podcasts-{episode.Season}", podcasts);

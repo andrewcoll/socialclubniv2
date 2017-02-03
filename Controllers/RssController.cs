@@ -15,10 +15,12 @@ namespace SocialClubNI
     public class RssController : Controller
     {
         private readonly StorageWrapper storageWrapper;
+        private readonly PodcastFileProvider fileProvider;
 
-        public RssController(StorageWrapper storageWrapper)
+        public RssController(StorageWrapper storageWrapper, PodcastFileProvider fileProvider)
         {
             this.storageWrapper = storageWrapper;
+            this.fileProvider = fileProvider;
         }
 
         public async Task<string> Index()
@@ -61,7 +63,7 @@ namespace SocialClubNI
                 ep.PubDate = episode.Published; 
                 ep.Author = "Laure James, Keith Bailie, Conor McLaughlin, Mark McIntosh";
                 ep.Url = new Uri($"http://thesocialclubni.com/download/{episode.Filename}?store=itunes");
-                ep.FileSize = 0; // TODO: bug fix
+                ep.FileSize = episode.FileSize;
                 ep.FileType = "audio/mpeg";
                 ep.Category = "Sports & Recreation";
                 ep.Guid = $"http://irishfantasyleague.com/podcast/{episode.Filename}";

@@ -51,5 +51,11 @@ namespace SocialClubNI.Models
         /// </summary>
         /// <returns></returns>
         public string Stub { get; set; }
+
+        /// <summary>
+        /// Podcast file size
+        /// </summary>
+        /// <returns></returns>
+        public long FileSize { get; set; }
     }
 }

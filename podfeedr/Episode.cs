@@ -62,7 +62,7 @@ namespace PodFeedr
         /// Podcast File Size
         /// </summary>
         /// <returns></returns>
-        public int FileSize { get; set; }
+        public long FileSize { get; set; }
 
         /// <summary>
         /// Podcast File Type
