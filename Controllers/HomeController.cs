@@ -69,7 +69,7 @@ namespace SocialClubNI.Controllers
             return View();
         }
 
-        [Authorize(Policy = "LoggedIn")]
+        [Authorize(Policy = "IsLoggedIn")]
         public async Task<IActionResult> Profile()
         {
             var user = await claimsManager.GetUser(HttpContext.User);

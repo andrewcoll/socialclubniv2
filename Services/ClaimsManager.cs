@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using SocialClubNI.Models;
@@ -9,7 +10,8 @@ namespace SocialClubNI.Services
 {
     public class ClaimsManager
     {
-        
+        private const string CLAIM_ISSUER = "http://thesocialclubni.com";
+
         public ClaimsPrincipal CreatePrincipalAsync(User user)
         {
             if(user == null)
@@ -17,12 +19,14 @@ namespace SocialClubNI.Services
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var claimId = new ClaimsIdentity();
-            claimId.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
-            claimId.AddClaim(new Claim(ClaimTypes.Name, user.Username));
-            claimId.AddClaim(new Claim("LastChanged", DateTime.UtcNow.ToString()));
-            claimId.AddClaim(new Claim("testing", "true"));
-            return new ClaimsPrincipal(claimId);
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id, ClaimValueTypes.String, CLAIM_ISSUER));
+            claims.Add(new Claim(ClaimTypes.Name, user.Username, ClaimValueTypes.String, CLAIM_ISSUER));
+
+            var identity = new ClaimsIdentity(claims, "Passport");
+            var principal = new ClaimsPrincipal(identity);
+            
+            return principal;
         }
     }
 }

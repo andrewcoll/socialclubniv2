@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage.Blob;
 using SocialClubNI.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialClubNI.Controllers
 {
@@ -27,6 +28,7 @@ namespace SocialClubNI.Controllers
             Response.Redirect(uri);
         }
 
+        [Authorize(Policy="IsLoggedIn")]
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {

@@ -53,6 +53,9 @@ namespace SocialClubNI.Services
             var salt = SaltProvider.GenerateSalt();
             var hashedPassword = SaltProvider.GenerateHashedPassword(password, salt);
 
+            Console.WriteLine(salt);
+            Console.WriteLine(hashedPassword);
+
             var user = new User()
             {
                 Username = username,
