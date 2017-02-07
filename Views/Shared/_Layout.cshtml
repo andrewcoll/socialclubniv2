@@ -60,7 +60,7 @@
             <a asp-controller="Admin" asp-action="Index">Admin Area</a>
             @if(await AuthorizationService.AuthorizeAsync(User, "IsLoggedIn"))
             {
-                || <a href="/logout">Logout</a>
+                <text>|</text> <a href="/logout">Logout</a>
             }
         </div>
     </footer>
