@@ -13,6 +13,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using SocialClubNI.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace SocialClubNI
 {
@@ -41,6 +42,11 @@ namespace SocialClubNI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.Configure<FormOptions>(opt =>
+            {
+                opt.MultipartBodyLengthLimit = 209715200;
+            });
 
             services.AddTransient<StorageWrapper>(provider => 
             {
