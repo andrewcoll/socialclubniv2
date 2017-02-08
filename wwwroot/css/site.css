@@ -179,3 +179,12 @@ a:hover {
     text-decoration: underline;
     color: rgb(236, 1, 138);
 }
+
+.dropzone {
+        background-color: #eff1f5;
+        border: black dashed 3px;   
+        padding: 50px;
+        margin-bottom:20px;
+        text-align: center;
+        color: rgb(236, 1, 138);
+    }
