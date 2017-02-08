@@ -9,7 +9,6 @@ using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
 using Blobr;
 
-
 namespace SocialClubNI.Controllers
 {
     [Authorize(Policy="IsLoggedIn")]

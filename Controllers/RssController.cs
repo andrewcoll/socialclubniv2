@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using SocialClubNI.Services;
 using Blobr;
@@ -13,17 +14,20 @@ namespace SocialClubNI
 {
     public class RssController : Controller
     {
+        private readonly TelemetryClient telemetryClient;
         private readonly StorageWrapper storageWrapper;
         private readonly PodcastFileProvider fileProvider;
 
-        public RssController(StorageWrapper storageWrapper, PodcastFileProvider fileProvider)
+        public RssController(StorageWrapper storageWrapper, PodcastFileProvider fileProvider, TelemetryClient telemetryClient)
         {
             this.storageWrapper = storageWrapper;
             this.fileProvider = fileProvider;
+            this.telemetryClient = telemetryClient;
         }
 
         public async Task<string> Index()
         {
+            telemetryClient.TrackEvent("rssrequest");
             var pod = new PodFeedr.Podcast();
             pod.Title = "The Social Club";
             pod.Link = new Uri("http://thesocialclubni.com");

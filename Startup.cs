@@ -1,4 +1,5 @@
 using System;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
 using SocialClubNI.Services;
 using Blobr;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace SocialClubNI
 {
@@ -27,6 +29,7 @@ namespace SocialClubNI
             {
                 // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
+                builder.AddApplicationInsightsSettings(developerMode: true);
             }
 
             builder.AddEnvironmentVariables();
@@ -40,6 +43,8 @@ namespace SocialClubNI
         {
             services.AddMvc();
 
+            services.AddApplicationInsightsTelemetry(Configuration["AppInsightsKey"]);
+
             services.Configure<FormOptions>(opt =>
             {
                 opt.MultipartBodyLengthLimit = 209715200;
@@ -50,7 +55,8 @@ namespace SocialClubNI
                 var azureWrapper = new AzureStorageWrapper(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"], "testingcontainer");
                 return new StorageWrapper(azureWrapper);    
             });
-
+            
+            services.AddTransient<TelemetryClient>();
             services.AddTransient<LoginManager>();
             services.AddTransient<ClaimsManager>();
             services.AddTransient<MixCloudProvider>();

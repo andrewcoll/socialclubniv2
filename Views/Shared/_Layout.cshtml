@@ -19,6 +19,7 @@
     <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    @Html.Raw(JavaScriptSnippet.FullScript)
     @RenderSection("head", required: false)
 </head>
 <body>

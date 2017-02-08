@@ -12,10 +12,8 @@ namespace SocialClubNI.Controllers
     public class HomeController : Controller
     {
         private const string MIXCLOUD_URL = "https://www.mixcloud.com/oembed/?url=https%3A//www.mixcloud.com/ardskeith/{0}/&format=json";
-
         private readonly StorageWrapper storageWrapper;
         private readonly LoginManager claimsManager;
-
         private readonly MixCloudProvider mixCloudProvider;
 
         public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager, MixCloudProvider mixCloudProvider)
