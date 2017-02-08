@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Blobr;
-using Newtonsoft.Json;
 using SocialClubNI.Models;
 using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-
+using Blobr;
 
 namespace SocialClubNI.Controllers
 {
@@ -32,23 +27,27 @@ namespace SocialClubNI.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Title = "Home";
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
             return View(page.Items.OrderByDescending(p => p.Published).First());
         }
 
         public IActionResult Team()
         {
+            ViewBag.Title = "Team";
             return View();
         }
 
         public async Task<IActionResult> Seasons(string season = "1617")
         {
+            ViewBag.Title = "Episodes";
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
             return View(page.Items.OrderByDescending(p => p.Published));
         }
 
         public IActionResult Error()
         {
+            ViewBag.Title = "Error";
             return View();
         }
 
@@ -61,11 +60,13 @@ namespace SocialClubNI.Controllers
 
             var mixcloudPodcast = MixCloudPodcast.FromPodcast(podcast, parsedResponse);
 
+            ViewBag.Title = mixcloudPodcast.Title;
             return View(mixcloudPodcast);
         }
 
         public IActionResult Forbidden()
         {
+            ViewBag.Title = "Forbidden";
             return View();
         }
 
@@ -73,8 +74,9 @@ namespace SocialClubNI.Controllers
         public async Task<IActionResult> Profile()
         {
             var user = await claimsManager.GetUser(HttpContext.User);
-
             var vm = new ProfileViewModel() { Username = user.Username, Email = user.Email };
+
+            ViewBag.Title = user.Username;
             return View(vm);
         }
     }

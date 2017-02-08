@@ -1,13 +1,14 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SocialClubNI.Models;
 using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 using Blobr;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Authorization;
+
 
 namespace SocialClubNI.Controllers
 {
@@ -27,21 +28,25 @@ namespace SocialClubNI.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Title = "Admin";
             return View();
         }
 
         public IActionResult Upload()
         {
+            ViewBag.Title = "Upload";
             return View();
         }
 
         public IActionResult Delete(string stub)
         {
+            ViewBag.Title = "Delete";
             return View();
         }
 
         public async Task<IActionResult> Episodes()
         {
+            ViewBag.Title = "Admin Episodes";
             // TODO add previous seasons
             var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
             var episodes = page.Items.OrderByDescending(p => p.Published).ToList();
@@ -53,6 +58,7 @@ namespace SocialClubNI.Controllers
         {
             if(string.IsNullOrWhiteSpace(stub))
             {
+                ViewBag.Title = "Create";
                 return View("CreateStub");
             }
 
@@ -63,6 +69,7 @@ namespace SocialClubNI.Controllers
             viewModel.Season = "1617";
             viewModel.Mp3s = await BuildFilenameSelect();
 
+            ViewBag.Title = "Create";
             return View("CreateEpisode", viewModel);
         }
 
@@ -106,6 +113,7 @@ namespace SocialClubNI.Controllers
                 return RedirectToAction("Episode", "Home", new { season = episode.Season, stub = episode.Stub});
             }
 
+            ViewBag.Title = "Create";
             return View(episode);
         }
 

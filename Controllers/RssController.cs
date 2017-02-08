@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SocialClubNI.Services;
-using SocialClubNI.Models;
 using Blobr;
 using PodFeedr;
 

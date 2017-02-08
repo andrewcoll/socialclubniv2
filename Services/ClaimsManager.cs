@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using SocialClubNI.Models;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Builder;
 
 namespace SocialClubNI.Services
 {

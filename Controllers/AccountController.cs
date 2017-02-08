@@ -1,10 +1,8 @@
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Authentication;
-using SocialClubNI.Models;
-using SocialClubNI.ViewModels;
 using SocialClubNI.Services;
+using SocialClubNI.ViewModels;
 
 namespace SocialClubNI.Controllers
 {
@@ -21,6 +19,7 @@ namespace SocialClubNI.Controllers
 
         public IActionResult Login()
         {
+            ViewBag.Title = "Login";
             return View();
         }
 
@@ -43,11 +42,13 @@ namespace SocialClubNI.Controllers
                 }
             }
 
+            ViewBag.Title = "Login";
             return View(loginViewModel);
         }
 
         public IActionResult Register()
         {
+            ViewBag.Title = "Register";
             return View();
         }
 
@@ -83,6 +84,7 @@ namespace SocialClubNI.Controllers
                 return RedirectToAction("Profile", "Home");
             }
 
+            ViewBag.Title = "Register";
             return View(registerViewModel);
         }
 

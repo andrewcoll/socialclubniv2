@@ -1,5 +1,3 @@
-using System;
-
 namespace SocialClubNI.Models
 {
     public class User

@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using SocialClubNI.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SocialClubNI.Models;
 
 namespace SocialClubNI.ViewModels
 {

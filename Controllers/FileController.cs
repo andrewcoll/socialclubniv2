@@ -1,11 +1,9 @@
-using System;
-using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.WindowsAzure.Storage.Blob;
-using SocialClubNI.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using SocialClubNI.Services;
+
 
 namespace SocialClubNI.Controllers
 {
