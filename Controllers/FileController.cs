@@ -22,7 +22,7 @@ namespace SocialClubNI.Controllers
         /// Download an episode from blob storage
         /// </summary>
         /// <param name="filename">Name of the file to download</param>
-        public void Download(string filename)
+        public void Download(string filename, string store = "web")
         {
             var uri = fileProvider.GetPodcastUrl(filename);
             Response.Redirect(uri);
