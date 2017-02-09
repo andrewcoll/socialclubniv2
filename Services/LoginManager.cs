@@ -40,7 +40,7 @@ namespace SocialClubNI.Services
                 }
             }
             
-            return existingUser;
+            return null;
         }
 
         public async Task<User> RegisterUserAsync(string username, string email, string password)
@@ -88,6 +88,14 @@ namespace SocialClubNI.Services
             var users = await storageWrapper.GetPageAsync<User>(USER_BLOB);
 
             return users.Items.Any(u => string.Compare(u.Email, email, true) == 0);
+        }
+
+        public async Task<string> GetRegistrationSecret()
+        {
+            var page = await storageWrapper.GetPageAsync<Setting>("secrets");
+            var secret = page.Items.FirstOrDefault(p => p.Name == "RegistrationSecret");
+
+            return secret == null ? string.Empty : secret.Value;
         }
     }
 }

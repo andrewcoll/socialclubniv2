@@ -52,7 +52,7 @@ namespace SocialClubNI
 
             services.AddTransient<StorageWrapper>(provider => 
             {
-                var azureWrapper = new AzureStorageWrapper(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"], "testingcontainer");
+                var azureWrapper = new AzureStorageWrapper(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"], "webdata");
                 return new StorageWrapper(azureWrapper);    
             });
             
@@ -63,7 +63,7 @@ namespace SocialClubNI
 
             services.AddTransient<CloudBlobContainer>(provider => 
             {
-                var storageAccount = new CloudStorageAccount(new StorageCredentials(Configuration["tscniRealName"], Configuration["tscniRealKey"]), true);
+                var storageAccount = new CloudStorageAccount(new StorageCredentials(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"]), true);
                 var blobClient = storageAccount.CreateCloudBlobClient();
                 var container = blobClient.GetContainerReference("podcasts");
 

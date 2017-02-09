@@ -57,6 +57,12 @@ namespace SocialClubNI.Controllers
         {
             if(ModelState.IsValid)
             {
+                if(await loginManager.GetRegistrationSecret() != registerViewModel.RegistrationKey)
+                {
+                    ModelState.AddModelError(string.Empty, "Incorrect registration secret.");
+                    return View(registerViewModel);
+                }
+
                 if(await loginManager.IsExistingUsername(registerViewModel.Username))
                 {
                     ModelState.AddModelError(string.Empty, "That username is already taken");

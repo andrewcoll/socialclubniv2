@@ -30,5 +30,11 @@ namespace SocialClubNI.ViewModels
         /// <returns></returns>
         [DataTypeAttribute(DataType.Password)]
         public string PasswordConfirm { get; set; }
+
+        /// <summary>
+        /// Registration key
+        /// </summary>
+        /// <returns></returns>
+        public string RegistrationKey { get; set; }
     }
 }
