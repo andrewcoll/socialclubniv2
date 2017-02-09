@@ -42,6 +42,8 @@ namespace PodFeedr
                 // start channel
                 xmlWriter.WriteStartElement("channel");
 
+                xmlWriter.WriteElementString(prefix, "new-feed-url", null, "http://thesocialclubni.com/rss?store=iTunes");
+
                 xmlWriter.WriteElementString("title", podcast.Title);
                 xmlWriter.WriteElementString("link", podcast.Link.ToString());
                 xmlWriter.WriteElementString("language", podcast.Language);
