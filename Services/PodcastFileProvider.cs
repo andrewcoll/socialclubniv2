@@ -84,5 +84,15 @@ namespace SocialClubNI.Services
             
             return length;
         }
+
+        /// <summary>
+        /// Get the URL for the podcast from the fileshare
+        /// </summary>
+        /// <param name="filename">The filename</param>
+        /// <returns></returns>
+        public string GetPodcastFileShareUrl(string filename)
+        {
+            return $"http://podcast.irishfantasyleague.com/{filename}";
+        }
     }
 }
