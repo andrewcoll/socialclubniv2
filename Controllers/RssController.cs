@@ -65,7 +65,7 @@ namespace SocialClubNI
                 ep.Subtitle = episode.SubTitle;
                 ep.PubDate = episode.Published; 
                 ep.Author = "Laure James, Keith Bailie, Conor McLaughlin, Mark McIntosh";
-                ep.Url = new Uri($"http://thesocialclubni.com/download/{episode.Filename}?store=itunes");
+                ep.Url = new Uri($"http://podcast.irishfantasyleague.com/{episode.Filename}");
                 ep.FileSize = episode.FileSize;
                 ep.FileType = "audio/mpeg";
                 ep.Category = "Sports & Recreation";
