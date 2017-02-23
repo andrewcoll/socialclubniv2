@@ -29,9 +29,12 @@ namespace SocialClubNI.Services
         /// <returns>The podcast url</returns>
         public string GetPodcastUrl(string filename)
         {
-            var blob = container.GetBlobReference(filename);
+            if(string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
 
-            return blob.Uri.ToString();
+            return $"http://storage.thesocialclubni.com/podcasts/{filename}";
         }
 
         /// <summary>
