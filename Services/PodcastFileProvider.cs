@@ -29,6 +29,18 @@ namespace SocialClubNI.Services
         /// <returns>The podcast url</returns>
         public string GetPodcastUrl(string filename)
         {
+            var blob = container.GetBlobReference(filename);
+
+            return blob.Uri.ToString();
+        }
+
+        /// <summary>
+        /// Get the Url for a provided podcast filename
+        /// </summary>
+        /// <param name="filename">The filename</param>
+        /// <returns>The podcast url</returns>
+        public string GetPodcastUrlWithSaS(string filename)
+        {
             var sasPolicy = new SharedAccessBlobPolicy();
             sasPolicy.SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(60);
             sasPolicy.Permissions = SharedAccessBlobPermissions.Read;
