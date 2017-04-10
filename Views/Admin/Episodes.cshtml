@@ -19,7 +19,7 @@
                         <p>@episode.Published.ToLocalTime().ToString("dddd, d MMMM yyyy")</p>
                     </div>
                     <div class="col-sm-12 col-md-2">
-                        <a asp-controller="Admin" asp-action="Delete" asp-route-stub="@episode.Stub"><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>
+                        <a asp-controller="Admin" asp-action="Delete" asp-route-stub="@episode.Stub" asp-route-season="@episode.Season"><span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span></a>
                     </div> 
                 </div>
                 <hr />
