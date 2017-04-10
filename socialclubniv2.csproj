@@ -19,11 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blobr\src\Blobr\Blobr.csproj" />
-    <ProjectReference Include="..\Mvc\src\Microsoft.AspNetCore.Mvc\Microsoft.AspNetCore.Mvc.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Blobr" Version="2.0.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
@@ -31,6 +27,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.0.2" />

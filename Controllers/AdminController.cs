@@ -37,10 +37,19 @@ namespace SocialClubNI.Controllers
             return View();
         }
 
-        public IActionResult Delete(string stub)
+        public async Task<IActionResult> Delete(string season, string stub)
         {
-            ViewBag.Title = "Delete";
-            return View();
+            var podcasts = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+            var episode = podcasts.Items.FirstOrDefault(p => p.Stub == stub);
+
+            if(episode == null)
+            {
+                return RedirectToAction("Episodes");
+            }
+
+            var newPage = storageWrapper.CreatePage<Podcast>($"podcasts-{season}", podcasts.Items.Where(p => p.Stub != stub).ToList());
+            await storageWrapper.SavePageAsync(newPage);
+            return RedirectToAction("Episodes");
         }
 
         public async Task<IActionResult> Episodes()
