@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialClubNI.Services;
 using Blobr;
 using PodFeedr;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SocialClubNI
 {
@@ -17,12 +18,21 @@ namespace SocialClubNI
         private readonly TelemetryClient telemetryClient;
         private readonly StorageWrapper storageWrapper;
         private readonly PodcastFileProvider fileProvider;
+        private readonly PodcastSeasons podcastSeasons;
+        private readonly IMemoryCache cache;
 
-        public RssController(StorageWrapper storageWrapper, PodcastFileProvider fileProvider, TelemetryClient telemetryClient)
+        public RssController(
+            StorageWrapper storageWrapper, 
+            PodcastFileProvider fileProvider, 
+            TelemetryClient telemetryClient, 
+            SeasonProviderFactory seasonProviderFactory, 
+            IMemoryCache cache)
         {
             this.storageWrapper = storageWrapper;
             this.fileProvider = fileProvider;
             this.telemetryClient = telemetryClient;
+            this.podcastSeasons = seasonProviderFactory.GetPodcastSeasons(DateTime.UtcNow);
+            this.cache = cache;
         }
 
         public async Task<string> Index()
@@ -100,14 +110,31 @@ namespace SocialClubNI
         {
             var podcasts = new List<SocialClubNI.Models.Podcast>();
 
-            var seasons = new []{ "1112", "1213", "1314", "1415", "1516", "1617" };
+            var seasons = podcastSeasons.Seasons.OrderBy(s => s.StartDate);
             foreach(var s in seasons)
             {
-                var page = await this.storageWrapper.GetPageAsync<SocialClubNI.Models.Podcast>($"podcasts-{s}");
-                podcasts.AddRange(page.Items);
+                try
+                {
+                    var page = await GetPage<SocialClubNI.Models.Podcast>($"podcasts-{s.Abbreviation}");
+                    podcasts.AddRange(page.Items);
+                }
+                catch(BlobrLoadException)
+                {
+                    continue;
+                }
             }
 
             return podcasts;
+        }
+
+        private async Task<Page<T>> GetPage<T>(string pageName)
+        {
+             return await cache.GetOrCreateAsync(pageName, async entry => 
+             {
+                 entry.SlidingExpiration = TimeSpan.FromMinutes(15);
+
+                 return await storageWrapper.GetPageAsync<T>(pageName);
+             });
         }
     }
 }
