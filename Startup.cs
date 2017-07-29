@@ -13,6 +13,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using SocialClubNI.Services;
 using Blobr;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SocialClubNI
 {
@@ -41,6 +42,8 @@ namespace SocialClubNI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+
             services.AddMvc();
 
             services.AddApplicationInsightsTelemetry(Configuration["AppInsightsKey"]);
@@ -61,6 +64,7 @@ namespace SocialClubNI
             services.AddTransient<ClaimsManager>();
             services.AddTransient<MixCloudProvider>();
             services.AddTransient<SeasonProviderFactory>();
+            services.AddTransient<MemoryCache>();
 
             services.AddTransient<CloudBlobContainer>(provider => 
             {

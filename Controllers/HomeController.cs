@@ -7,6 +7,7 @@ using SocialClubNI.Models;
 using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
 using Blobr;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SocialClubNI.Controllers
 {
@@ -17,13 +18,20 @@ namespace SocialClubNI.Controllers
         private readonly LoginManager claimsManager;
         private readonly MixCloudProvider mixCloudProvider;
         private readonly PodcastSeasons podcastSeasons;
+        private readonly IMemoryCache cache;
 
-        public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager, MixCloudProvider mixCloudProvider, SeasonProviderFactory SeasonProviderFactory)
+        public HomeController(
+            StorageWrapper storageWrapper, 
+            IMemoryCache cache, 
+            LoginManager claimsManager, 
+            MixCloudProvider mixCloudProvider, 
+            SeasonProviderFactory SeasonProviderFactory)
         {
             this.storageWrapper = storageWrapper;
             this.claimsManager = claimsManager;
             this.mixCloudProvider = mixCloudProvider;
             this.podcastSeasons = SeasonProviderFactory.GetPodcastSeasons(DateTimeOffset.Now);
+            this.cache = cache;
         }
 
         public async Task<IActionResult> Index()
@@ -33,14 +41,24 @@ namespace SocialClubNI.Controllers
             Page<Podcast> page;
             try
             {
-                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{currentSeason}");
+                page = await GetPage<Podcast>($"podcasts-{currentSeason}");
             }
             catch(BlobrLoadException)
             {
                 currentSeason = podcastSeasons.Seasons.OrderByDescending(s => s.StartDate).Skip(1).Take(1).First().Abbreviation;
-                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{currentSeason}");
+                page = await GetPage<Podcast>($"podcasts-{currentSeason}");
             }
             return View(page.Items.OrderByDescending(p => p.Published).First());
+        }
+
+        private async Task<Page<T>> GetPage<T>(string pageName)
+        {
+            return await cache.GetOrCreateAsync(pageName, async entry => 
+            {
+                entry.SlidingExpiration = TimeSpan.FromMinutes(15);
+
+                return await storageWrapper.GetPageAsync<T>(pageName);
+            });
         }
 
         public IActionResult Team()
@@ -59,12 +77,12 @@ namespace SocialClubNI.Controllers
             Page<Podcast> page;
             try
             {
-                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+                page = await GetPage<Podcast>($"podcasts-{season}");
             }
             catch(BlobrLoadException)
             {
                 season = podcastSeasons.Seasons.OrderByDescending(s => s.StartDate).Skip(1).Take(1).First().Abbreviation;
-                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+                page = await GetPage<Podcast>($"podcasts-{season}");
             }
             ViewBag.Seasons = podcastSeasons.Seasons.OrderByDescending(s => s.StartDate);
             return View(page.Items.OrderByDescending(p => p.Published));
@@ -78,7 +96,7 @@ namespace SocialClubNI.Controllers
 
         public async Task<IActionResult> Episode(string season, string stub)
         {
-            var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+            var page = await GetPage<Podcast>($"podcasts-{season}");
             var podcast = page.Items.FirstOrDefault(p => string.Compare(stub, p.Stub, true) == 0);
 
             var parsedResponse = await mixCloudProvider.GetMixCloudEmbed(stub);
