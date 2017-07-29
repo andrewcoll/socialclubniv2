@@ -8,6 +8,7 @@ using SocialClubNI.Models;
 using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
 using Blobr;
+using System;
 
 namespace SocialClubNI.Controllers
 {
@@ -17,12 +18,14 @@ namespace SocialClubNI.Controllers
         private readonly StorageWrapper storageWrapper;
         private readonly MixCloudProvider mixCloudProvider;
         private readonly PodcastFileProvider fileProvider;
+        private readonly PodcastSeasons podcastSeasons;
 
-        public AdminController(StorageWrapper storageWrapper, MixCloudProvider mixCloudProvider, PodcastFileProvider fileProvider)
+        public AdminController(StorageWrapper storageWrapper, MixCloudProvider mixCloudProvider, PodcastFileProvider fileProvider, SeasonProviderFactory seasonProviderFactory)
         {
             this.storageWrapper = storageWrapper;
             this.mixCloudProvider = mixCloudProvider;
             this.fileProvider = fileProvider;
+            this.podcastSeasons = seasonProviderFactory.GetPodcastSeasons(DateTimeOffset.Now);
         }
 
         public IActionResult Index()
@@ -55,9 +58,20 @@ namespace SocialClubNI.Controllers
         public async Task<IActionResult> Episodes()
         {
             ViewBag.Title = "Admin Episodes";
-            // TODO add previous seasons
-            var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
-            var episodes = page.Items.OrderByDescending(p => p.Published).ToList();
+            List<Podcast> episodes = new List<Podcast>();
+            foreach(var season in podcastSeasons.Seasons.OrderByDescending(p => p.StartDate))
+            {
+                try
+                {
+                    var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season.Abbreviation}");
+                    var eps = page.Items.OrderByDescending(p => p.Published).ToList();
+                    episodes.AddRange(eps);
+                }
+                catch(BlobrLoadException)
+                {
+                    continue;
+                }
+            }
             var vm = new ManageEpisodesViewModel() { Episodes = episodes };
             return View(vm);
         }
@@ -74,7 +88,7 @@ namespace SocialClubNI.Controllers
             var viewModel = CreateEpisodeViewModel.FromPodcast(podcast);
 
             // TODO: read the current season value from settings
-            viewModel.Season = "1617";
+            viewModel.Season = podcastSeasons.CurrentSeason.Abbreviation;
             viewModel.Mp3s = await BuildFilenameSelect();
 
             ViewBag.Title = "Create";
@@ -86,8 +100,16 @@ namespace SocialClubNI.Controllers
         {
             if(ModelState.IsValid)
             {
-                var podcasts = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{episode.Season}");
-
+                Page<Podcast> podcasts;
+                try
+                {
+                    podcasts = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{episode.Season}");
+                }
+                catch(BlobrLoadException)
+                {
+                    podcasts = storageWrapper.CreatePage<Podcast>("podcasts-{episode.Season}", new List<Podcast>());
+                }
+                
                 if(podcasts.Items.Any(p => p.Filename == episode.Filename))
                 {
                     ModelState.AddModelError(string.Empty, $"The file '{episode.Filename}' already belongs to an existing podcast");

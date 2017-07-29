@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -15,18 +16,30 @@ namespace SocialClubNI.Controllers
         private readonly StorageWrapper storageWrapper;
         private readonly LoginManager claimsManager;
         private readonly MixCloudProvider mixCloudProvider;
+        private readonly PodcastSeasons podcastSeasons;
 
-        public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager, MixCloudProvider mixCloudProvider)
+        public HomeController(StorageWrapper storageWrapper, LoginManager claimsManager, MixCloudProvider mixCloudProvider, SeasonProviderFactory SeasonProviderFactory)
         {
             this.storageWrapper = storageWrapper;
             this.claimsManager = claimsManager;
             this.mixCloudProvider = mixCloudProvider;
+            this.podcastSeasons = SeasonProviderFactory.GetPodcastSeasons(DateTimeOffset.Now);
         }
 
         public async Task<IActionResult> Index()
         {
             ViewBag.Title = "Home";
-            var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-1617");
+            var currentSeason = podcastSeasons.CurrentSeason.Abbreviation;
+            Page<Podcast> page;
+            try
+            {
+                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{currentSeason}");
+            }
+            catch(BlobrLoadException)
+            {
+                currentSeason = podcastSeasons.Seasons.OrderByDescending(s => s.StartDate).Skip(1).Take(1).First().Abbreviation;
+                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{currentSeason}");
+            }
             return View(page.Items.OrderByDescending(p => p.Published).First());
         }
 
@@ -36,10 +49,24 @@ namespace SocialClubNI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Seasons(string season = "1617")
+        public async Task<IActionResult> Seasons(string season)
         {
+            if(string.IsNullOrWhiteSpace(season))
+            {
+                season = podcastSeasons.CurrentSeason.Abbreviation;
+            }
             ViewBag.Title = "Episodes";
-            var page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+            Page<Podcast> page;
+            try
+            {
+                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+            }
+            catch(BlobrLoadException)
+            {
+                season = podcastSeasons.Seasons.OrderByDescending(s => s.StartDate).Skip(1).Take(1).First().Abbreviation;
+                page = await storageWrapper.GetPageAsync<Podcast>($"podcasts-{season}");
+            }
+            ViewBag.Seasons = podcastSeasons.Seasons.OrderByDescending(s => s.StartDate);
             return View(page.Items.OrderByDescending(p => p.Published));
         }
 

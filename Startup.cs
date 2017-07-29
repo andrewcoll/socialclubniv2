@@ -60,6 +60,7 @@ namespace SocialClubNI
             services.AddTransient<LoginManager>();
             services.AddTransient<ClaimsManager>();
             services.AddTransient<MixCloudProvider>();
+            services.AddTransient<SeasonProviderFactory>();
 
             services.AddTransient<CloudBlobContainer>(provider => 
             {
