@@ -50,7 +50,7 @@ namespace SocialClubNI
 
             services.Configure<FormOptions>(opt =>
             {
-                opt.MultipartBodyLengthLimit = 209715200;
+                opt.MultipartBodyLengthLimit = 314572800;
             });
 
             services.AddTransient<StorageWrapper>(provider => 
