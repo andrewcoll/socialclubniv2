@@ -58,6 +58,7 @@ namespace PodFeedr
                 xmlWriter.WriteStartElement(prefix, "image", null);
                 xmlWriter.WriteAttributeString("href", podcast.Image.ToString());
                 xmlWriter.WriteEndElement();
+                xmlWriter.WriteElementString("image", podcast.Image.ToString());
 
                 xmlWriter.WriteStartElement(prefix, "owner", null);
                 xmlWriter.WriteElementString(prefix, "name", null, podcast.Owner.Name);
