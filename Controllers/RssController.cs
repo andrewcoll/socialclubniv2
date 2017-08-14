@@ -54,7 +54,7 @@ namespace SocialClubNI
                 Email = "podcast@thesocialclubni.com"
             };
 
-            pod.Image = new Uri("http://irishfantasyleague.com/podcast/logo.jpg");
+            pod.Image = new Uri("https://storage.thesocialclubni.com/static/logo.jpg");
             
             pod.Category = new Category()
             {
