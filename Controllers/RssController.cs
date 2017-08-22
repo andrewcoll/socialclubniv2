@@ -131,7 +131,7 @@ namespace SocialClubNI
         {
              return await cache.GetOrCreateAsync(pageName, async entry => 
              {
-                 entry.SlidingExpiration = TimeSpan.FromMinutes(15);
+                 entry.AbsoluteExpiration = TimeSpan.FromMinutes(15);
 
                  return await storageWrapper.GetPageAsync<T>(pageName);
              });
