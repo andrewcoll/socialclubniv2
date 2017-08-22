@@ -55,7 +55,7 @@ namespace SocialClubNI.Controllers
         {
             return await cache.GetOrCreateAsync(pageName, async entry => 
             {
-                entry.AbsoluteExpiration = TimeSpan.FromMinutes(15);
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(15);
 
                 return await storageWrapper.GetPageAsync<T>(pageName);
             });
