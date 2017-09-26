@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 using SocialClubNI.Models;
 using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
@@ -19,13 +20,15 @@ namespace SocialClubNI.Controllers
         private readonly MixCloudProvider mixCloudProvider;
         private readonly PodcastFileProvider fileProvider;
         private readonly PodcastSeasons podcastSeasons;
+        private readonly IMemoryCache cache;
 
-        public AdminController(StorageWrapper storageWrapper, MixCloudProvider mixCloudProvider, PodcastFileProvider fileProvider, SeasonProviderFactory seasonProviderFactory)
+        public AdminController(StorageWrapper storageWrapper, IMemoryCache cache, MixCloudProvider mixCloudProvider, PodcastFileProvider fileProvider, SeasonProviderFactory seasonProviderFactory)
         {
             this.storageWrapper = storageWrapper;
             this.mixCloudProvider = mixCloudProvider;
             this.fileProvider = fileProvider;
             this.podcastSeasons = seasonProviderFactory.GetPodcastSeasons(DateTimeOffset.Now);
+            this.cache = cache;
         }
 
         public IActionResult Index()
@@ -139,6 +142,9 @@ namespace SocialClubNI.Controllers
 
                 podcasts.AddItem(podcast);
                 await storageWrapper.SavePageAsync(podcasts);
+                
+                // clear the cache when adding a new episode
+                cache.Remove("podcasts-{podcast.Season}");
 
                 return RedirectToAction("Episode", "Home", new { season = episode.Season, stub = episode.Stub});
             }
