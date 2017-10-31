@@ -53,12 +53,14 @@ namespace SocialClubNI.Controllers
 
         private async Task<Page<T>> GetPage<T>(string pageName)
         {
-            return await cache.GetOrCreateAsync(pageName, async entry => 
-            {
-                entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(15);
+            // return await cache.GetOrCreateAsync(pageName, async entry => 
+            // {
+            //     entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(15);
 
-                return await storageWrapper.GetPageAsync<T>(pageName);
-            });
+            //     return await storageWrapper.GetPageAsync<T>(pageName);
+            // });
+
+            return await storageWrapper.GetPageAsync<T>(pageName);
         }
 
         public IActionResult Team()
