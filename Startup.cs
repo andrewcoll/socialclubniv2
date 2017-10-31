@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,32 +15,20 @@ using SocialClubNI.Services;
 using Blobr;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Net.Http.Headers;
 
 namespace SocialClubNI
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            if (env.IsDevelopment())
-            {
-                // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
-
-            builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMemoryCache();
@@ -65,7 +54,7 @@ namespace SocialClubNI
             services.AddTransient<MixCloudProvider>();
             services.AddTransient<SeasonProviderFactory>();
             services.AddTransient<MemoryCache>();
-
+            services.AddTransient<PodcastFileProvider>();
             services.AddTransient<CloudBlobContainer>(provider => 
             {
                 var storageAccount = new CloudStorageAccount(new StorageCredentials(Configuration["tscniBlobAccount"], Configuration["tscniBlobKey"]), true);
@@ -73,9 +62,21 @@ namespace SocialClubNI
                 var container = blobClient.GetContainerReference("podcasts");
 
                 return container;
-            });
+            });          
 
-            services.AddTransient<PodcastFileProvider>();
+            services.AddAuthentication(
+                o => {
+                    o.DefaultChallengeScheme = "TscniCookieMiddlewareInstance";
+                    o.DefaultAuthenticateScheme = "TscniCookieMiddlewareInstance";
+                    o.DefaultScheme = "TscniCookieMiddlewareInstance";
+                })
+                .AddCookie("TscniCookieMiddlewareInstance", options =>
+                {
+                    options.LoginPath = new PathString("/login");
+                    options.AccessDeniedPath = new PathString("/forbidden");
+                    options.ExpireTimeSpan = new TimeSpan(14, 0, 0, 0);
+                    options.SlidingExpiration = true;
+                });
 
             services.AddAuthorization(options => 
             {
@@ -99,17 +100,9 @@ namespace SocialClubNI
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            // setup authorisation
-            app.UseCookieAuthentication(new CookieAuthenticationOptions()
-            {
-                AuthenticationScheme = "TscniCookieMiddlewareInstance",
-                LoginPath = new PathString("/login"),
-                AccessDeniedPath = new PathString("/forbidden"),
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                ExpireTimeSpan = new TimeSpan(14, 0, 0, 0),
-                SlidingExpiration = true
-            });
+            app.UseRewriter(rewriteOptions);
+
+            app.UseAuthentication();          
 
             app.UseStaticFiles();
 

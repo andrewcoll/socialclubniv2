@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.Authentication;
 using SocialClubNI.Services;
 using SocialClubNI.ViewModels;
+using System.Threading.Tasks;
 
 namespace SocialClubNI.Controllers
 {
@@ -32,7 +32,7 @@ namespace SocialClubNI.Controllers
                 if(result != null)
                 {
                     var userPrincipal = claimsManager.CreatePrincipalAsync(result);
-                    await HttpContext.Authentication.SignInAsync("TscniCookieMiddlewareInstance", userPrincipal, new AuthenticationProperties() { IsPersistent = true });
+                    await HttpContext.SignInAsync("TscniCookieMiddlewareInstance", userPrincipal, new AuthenticationProperties() { IsPersistent = true });
                     return RedirectToAction("Profile", "Home");
                 }
                 else
@@ -85,7 +85,7 @@ namespace SocialClubNI.Controllers
 
                 var registeredUser = await loginManager.RegisterUserAsync(registerViewModel.Username, registerViewModel.Email, registerViewModel.Password);
                 var userPrincipal = claimsManager.CreatePrincipalAsync(registeredUser);
-                await HttpContext.Authentication.SignInAsync("TscniCookieMiddlewareInstance", userPrincipal, new AuthenticationProperties() { IsPersistent = true } );
+                await HttpContext.SignInAsync("TscniCookieMiddlewareInstance", userPrincipal, new AuthenticationProperties() { IsPersistent = true } );
 
                 return RedirectToAction("Profile", "Home");
             }
@@ -97,7 +97,7 @@ namespace SocialClubNI.Controllers
         public async Task<IActionResult> Logout()
         {
             var x = HttpContext.User;
-            await HttpContext.Authentication.SignOutAsync("TscniCookieMiddlewareInstance");
+            await HttpContext.SignOutAsync("TscniCookieMiddlewareInstance");
             var y = HttpContext.User;
             return RedirectToAction("Index", "Home");
         }
