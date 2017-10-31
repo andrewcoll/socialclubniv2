@@ -100,8 +100,6 @@ namespace SocialClubNI
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseRewriter(rewriteOptions);
-
             app.UseAuthentication();          
 
             app.UseStaticFiles();
