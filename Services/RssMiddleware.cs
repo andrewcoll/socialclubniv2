@@ -4,38 +4,37 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Mvc;
-using SocialClubNI.Services;
 using Blobr;
+using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using PodFeedr;
-using Microsoft.Extensions.Caching.Memory;
 
-namespace SocialClubNI
+namespace SocialClubNI.Services
 {
-    public class RssController : Controller
+    public class RssMiddleware
     {
         private readonly TelemetryClient telemetryClient;
         private readonly StorageWrapper storageWrapper;
         private readonly PodcastFileProvider fileProvider;
         private readonly PodcastSeasons podcastSeasons;
-        private readonly IMemoryCache cache;
+        private readonly RequestDelegate next;
 
-        public RssController(
+        public RssMiddleware(
             StorageWrapper storageWrapper, 
             PodcastFileProvider fileProvider, 
             TelemetryClient telemetryClient, 
-            SeasonProviderFactory seasonProviderFactory, 
-            IMemoryCache cache)
+            SeasonProviderFactory seasonProviderFactory,
+            RequestDelegate next)
         {
             this.storageWrapper = storageWrapper;
             this.fileProvider = fileProvider;
             this.telemetryClient = telemetryClient;
             this.podcastSeasons = seasonProviderFactory.GetPodcastSeasons(DateTime.UtcNow);
-            this.cache = cache;
+            this.next = next;
         }
 
-        public async Task<string> Index()
+        public async Task InvokeAsync(HttpContext context)
         {
             telemetryClient.TrackEvent("rssrequest");
             var pod = new PodFeedr.Podcast();
@@ -102,9 +101,10 @@ namespace SocialClubNI
                 response = Encoding.UTF8.GetString(stream.ToArray());
             }
 
-            HttpContext.Response.ContentType = "application/xml";
-            return response;
-        }
+            context.Response.ContentType = "application/xml";
+
+            await context.Response.WriteAsync(response);
+       }
 
         private async Task<ICollection<SocialClubNI.Models.Podcast>> GetAllPodcasts()
         {
@@ -129,13 +129,6 @@ namespace SocialClubNI
 
         private async Task<Page<T>> GetPage<T>(string pageName)
         {
-            //  return await cache.GetOrCreateAsync(pageName, async entry => 
-            //  {
-            //      entry.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(15);
-
-            //      return await storageWrapper.GetPageAsync<T>(pageName);
-            //  });
-
             return await storageWrapper.GetPageAsync<T>(pageName);
         }
     }

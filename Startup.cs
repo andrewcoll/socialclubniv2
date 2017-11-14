@@ -17,6 +17,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace SocialClubNI
 {
@@ -25,6 +26,7 @@ namespace SocialClubNI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -33,7 +35,10 @@ namespace SocialClubNI
         {
             services.AddMemoryCache();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+                {
+                    options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                });
 
             services.AddApplicationInsightsTelemetry(Configuration["AppInsightsKey"]);
 
@@ -85,10 +90,13 @@ namespace SocialClubNI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            // register Rss feed middleware
+            app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/rss"), builder => builder.UseRssFeed());
 
             if (env.IsDevelopment())
             {
