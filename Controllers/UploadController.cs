@@ -13,10 +13,10 @@ using SocialClubNI.Models;
 
 namespace SocialClubNI
 {
-    //[Authorize(Policy="IsLoggedIn")]
+    [Authorize(Policy="IsLoggedIn")]
     public class UploadController : Controller
     {
-        private readonly PodcastFileProvider fileProvider;
+        private readonly PodcastFileProvider fileProvider;  
 
         public UploadController(PodcastFileProvider fileProvider)
         {

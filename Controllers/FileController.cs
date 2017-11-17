@@ -27,17 +27,5 @@ namespace SocialClubNI.Controllers
             var uri = fileProvider.GetPodcastUrlWithSaS(filename);
             Response.Redirect(uri);
         }
-
-        [Authorize(Policy="IsLoggedIn")]
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
-        {
-            using(var fileStream = file.OpenReadStream())
-            {
-                await fileProvider.UploadFileAsync(fileStream, file.FileName);
-            }
-            
-            return View("FileUploadSuccess");
-        }
     }
 }
