@@ -38,7 +38,7 @@ namespace SocialClubNI.Services
         }
 
         /// <summary>
-        /// Get the Url for a provided podcast filename
+        /// Get the Url for a provided podcast filename with a Shared Access Token
         /// </summary>
         /// <param name="filename">The filename</param>
         /// <returns>The podcast url</returns>
@@ -51,7 +51,20 @@ namespace SocialClubNI.Services
             var blob = container.GetBlobReference(filename);
             var signature = blob.GetSharedAccessSignature(sasPolicy);
 
-            return blob.Uri + signature;
+            return $"http://storage.thesocialclubni.com/podcasts/{filename}" + signature;
+        }
+
+        /// <summary>
+        /// Get the Shared Access Token for the podcast blob container
+        /// </summary>
+        /// <returns>The podcast container SAS</returns>
+        public string GetPodcastContainerSaS()
+        {
+            var sasPolicy = new SharedAccessBlobPolicy();
+            sasPolicy.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddMinutes(5);
+            sasPolicy.Permissions = SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Write;
+
+            return container.GetSharedAccessSignature(sasPolicy);
         }
 
         /// <summary>
@@ -63,7 +76,8 @@ namespace SocialClubNI.Services
         public async Task<string> UploadFileAsync(Stream stream, string filename)
         {
             var blob = container.GetBlockBlobReference(filename);
-
+            
+            
             await blob.UploadFromStreamAsync(stream);
             blob.Properties.ContentType = "audio/mpeg";
             await blob.SetPropertiesAsync();

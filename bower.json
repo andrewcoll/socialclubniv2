@@ -6,6 +6,7 @@
     "jquery": "2.2.3",
     "jquery-validation": "1.15.0",
     "jquery-validation-unobtrusive": "3.2.6",
-    "dropzone": "4.3.0"
+    "dropzone": "4.3.0",
+    "resumable.js": "2.2.0"
   }
 }

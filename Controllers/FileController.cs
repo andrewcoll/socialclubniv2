@@ -24,20 +24,8 @@ namespace SocialClubNI.Controllers
         public void Download(string filename, string store = "web")
         {
             telemetryClient.TrackEvent($"dl-{store}-{filename}");
-            var uri = fileProvider.GetPodcastUrl(filename);
+            var uri = fileProvider.GetPodcastUrlWithSaS(filename);
             Response.Redirect(uri);
-        }
-
-        [Authorize(Policy="IsLoggedIn")]
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
-        {
-            using(var fileStream = file.OpenReadStream())
-            {
-                await fileProvider.UploadFileAsync(fileStream, file.FileName);
-            }
-            
-            return View("FileUploadSuccess");
         }
     }
 }
