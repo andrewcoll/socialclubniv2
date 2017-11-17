@@ -5,14 +5,27 @@
             <p>Select the mp3 below to upload. Max size is 300MB.</p>
             <p><a asp-controller="Admin" asp-action="Index">Admin Index</a></div>
             <hr />
-            <input type="file" class="form-control" name="podcastFile" id="podcastFile" accept=".mp3"/> <input id="podcastFileSubmit" class="btn btn-primary" type="button" onclick="uploader.upload(); return(false);" value="Upload"/>
-            <!--<progress id="uploadProgress" value="0" max="100" hidden></progress>-->
-            <div class="progress">
-              <div class="progress-bar" id="uploadProgress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" hidden>
-                <span class="sr-only">&nbsp;</span>
+            <div class="panel panel-default" id="uploadPanel">
+              <div class="panel-heading">Select Mp3</div>
+              <div class="panel-body">
+                <form class="form-inline">
+                  <div class="form-group">
+                    <input type="file" class="form-control" name="podcastFile" id="podcastFile" accept=".mp3"/>
+                  </div>
+                  <input id="podcastFileSubmit" class="btn btn-primary" type="button" onclick="uploader.upload(); return(false);" value="Upload"/>
+                </form>
               </div>
             </div>
-
+            <div class="panel panel-primary" id="uploadProgressPanel" hidden>
+              <div class="panel-heading" id="uploadProgressPanelHeading">Uploading</div>
+              <div class="panel-body">
+                <div class="progress">
+                  <div class="progress-bar" id="uploadProgress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    <span class="sr-only">&nbsp;</span>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
     </div>
 </div>
@@ -28,7 +41,8 @@
         upload : function()
         {
           $('#podcastFileSubmit').attr("disabled", true);
-          $('#uploadProgress').attr("hidden", false);
+          $('#uploadProgressPanel').attr("hidden", false);
+          $('#uploadPanel').attr("hidden", true);
 
           $.get("/upload/initiate", function(sasToken)
           {
@@ -47,9 +61,13 @@
                     $('#podcastFileSubmit').attr("disabled", true);
                     $('#uploadProgress').attr("aria-valuenow", 0);
                     $('#uploadProgress').css("width", '0%');
-                    $('#uploadProgress').attr("hidden", true);
+                    $('#uploadProgressPanel').attr("hidden", true);
+                    $('#uploadPanel').attr("hidden", false);
                 } else {
                     $('#uploadProgress').addClass('progress-bar-success');
+                    $('#uploadProgressPanel').removeClass('panel-primary');
+                    $('#uploadProgressPanel').addClass('panel-success');
+                    $('#uploadProgressPanelHeading').text('Upload Complete');
                 }
             });
 

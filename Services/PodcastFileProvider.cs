@@ -61,8 +61,8 @@ namespace SocialClubNI.Services
         public string GetPodcastContainerSaS()
         {
             var sasPolicy = new SharedAccessBlobPolicy();
-            sasPolicy.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddMinutes(10);
-            sasPolicy.Permissions = SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Write | SharedAccessBlobPermissions.List;
+            sasPolicy.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddMinutes(5);
+            sasPolicy.Permissions = SharedAccessBlobPermissions.Create | SharedAccessBlobPermissions.Write;
 
             return container.GetSharedAccessSignature(sasPolicy);
         }
