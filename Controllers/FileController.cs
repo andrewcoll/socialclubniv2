@@ -24,7 +24,7 @@ namespace SocialClubNI.Controllers
         public void Download(string filename, string store = "web")
         {
             telemetryClient.TrackEvent($"dl-{store}-{filename}");
-            var uri = fileProvider.GetPodcastUrlWithSaS(filename);
+            var uri = fileProvider.GetPodcastUrl(filename);
             Response.Redirect(uri);
         }
     }
